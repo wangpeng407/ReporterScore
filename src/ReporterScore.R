@@ -38,7 +38,7 @@ StatKOAttributes <- function(kodt, vs_group){
                         paste0('avg_', g1),
                         paste0('sd_', g1),
                         paste0('avg_', g2),
-                        paste0('sd_', g2), 
+                        paste0('sd_', g2),
                         'diff_mean', 'p.value')
   res.dt$q.value <- p.adjust(res.dt$p.value, method = 'BH')
   res.dt$sign <- ifelse(res.dt$diff_mean < 0, -1, 1)
@@ -48,8 +48,8 @@ StatKOAttributes <- function(kodt, vs_group){
   res.dt$Z_score <- ifelse(res.dt$sign < 0, -res.dt$Z_score, res.dt$Z_score)
   t2 <- Sys.time()
   deltat <- sprintf("%.3f", t2 - t1)
-  resinfo <- paste0('Compared groups: ', g1, ' and ', g2, "\n", 
-                    'Total KO number: ', length(all.KOs), "\n", 
+  resinfo <- paste0('Compared groups: ', g1, ' and ', g2, "\n",
+                    'Total KO number: ', length(all.KOs), "\n",
                     'Time use: ', deltat, attr(deltat, 'units'), "\n")
   cat(resinfo)
   return(res.dt)
@@ -68,7 +68,7 @@ ReporterScoreCaculate <- function(modulelist, KOstat){
     res <- c(mean(temp), sd(temp))
     return(res)
   }
-  
+
   modules <- modulelist$id
   reporterScores <- c()
   for(i in seq_len(length(modules))){
@@ -77,13 +77,14 @@ ReporterScoreCaculate <- function(modulelist, KOstat){
     z <- KOstat$Z_score[KOstat$KO_id %in% strsplit(modulelist$KOs[i], ',')[[1]]]
     KOnum <- modulelist$K_num[i]
 	clean.KO <- KOstat$Z_score[!is.na(KOstat$Z_score)]
+	KOnum <- ifelse(length(clean.KO) >= KOnum, KOnum, length(clean.KO))
     mean_sd <- random_mean_sd_from_vec(clean.KO, KOnum, 1000)
     MEAN <- mean_sd[1]
     SD <- mean_sd[2]
     reporter_score <- (sum(z) / sqrt(KOnum) - MEAN)/SD
     reporterScores <- c(reporterScores, reporter_score)
   }
-  reporter_res <- data.frame(ID = modules, 
+  reporter_res <- data.frame(ID = modules,
                              ReporterScore = reporterScores,
                              Description = module_list$Description)
   t2 <- Sys.time()
