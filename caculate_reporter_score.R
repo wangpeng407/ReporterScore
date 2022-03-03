@@ -1,12 +1,12 @@
 #args <- commandArgs(T)
-#length(args) == 
+#length(args) ==
 library(optparse)
 option_list <- list(
   make_option(c("--group"), action="store", type="character", default=NULL, help="Input the group.list"),
   make_option(c("--abund"), action="store", type="character", default=NULL, help="Input the Unigenes.relative.ko.xls, no detailed information"),
   make_option(c("--type"), action="store", default='module', type="character", help="Enrichment type module or pathway, default is module"),
   make_option(c("--outdir"), action="store", default="./", type="character", help="The output dirctory, default is ./")
-)  
+)
 opt <- parse_args(OptionParser(usage="%prog [options] file\n", option_list=option_list))
 
 path_get <- function(){
